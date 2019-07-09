@@ -22,31 +22,11 @@ export class App extends Component {
     }
 
     componentDidMount() {
-        // console.log("quizquestions", quizQuestions);
-        const shuffledAnswerOptions = quizQuestions.map(question =>
-      this.shuffleArray(question.answers)
-    );
-    // console.log("shuffled", shuffledAnswerOptions);
-    // console.log("newtry", quizQuestions.answers);
-    this.setState({
-      question: quizQuestions[0].question,
-      answerOptions: shuffledAnswerOptions[0]
-    });
+        this.setState({
+          question: quizQuestions[0].question,
+          answerOptions: quizQuestions[0].answers
+        });
     }
-
-    shuffleArray(array) {
-    var currentIndex = array.length,
-      temporaryValue,
-      randomIndex;
-    while (0 !== currentIndex) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-    return array;
-  }
 
     handleAnswerSelected(event) {
       this.setUserAnswer(event.currentTarget.value);
