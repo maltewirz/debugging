@@ -32,9 +32,9 @@ export class App extends Component {
       this.setUserAnswer(event.currentTarget.value);
 
       if (this.state.questionId < quizQuestions.length) {
-        setTimeout(() => this.setNextQuestion(), 300);
+        this.setNextQuestion();
       } else {
-        setTimeout(() => this.setResults(this.getResults()), 300);
+        this.setResults(this.getResults());
       }
     }
 
@@ -95,14 +95,11 @@ export class App extends Component {
        return <Result quizResult={this.state.result} />;
      }
 
-
-
     render() {
         return (
             <BrowserRouter>
                 <div className="App">
                 {this.state.result ? this.renderResult() : this.renderQuiz()}
-
                 </div>
             </BrowserRouter>
         );
