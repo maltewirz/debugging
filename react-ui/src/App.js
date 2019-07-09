@@ -1,101 +1,107 @@
 import React, { Component } from 'react';
-// import axios from "./axios";
 import { BrowserRouter } from 'react-router-dom';
 import Quiz from './components/quiz';
 import Result from './components/result'
-import quizQuestions from './api/quizquestions';
+import questionData from './api/questiondata';
 
 export class App extends Component {
+
     constructor(props) {
             super(props);
 
             this.state = {
-              counter: 0,
               questionId: 1,
               question: '',
-              answerOptions: [],
-              answer: '',
-              answersCount: {},
-              result: ''
+              boxStateValue: false,
+              resultCache: {},
+              finalResultPoints: 0,
+              finalResultTopics: 0
         };
-        this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
+        this.setNextQuestion = this.setNextQuestion.bind(this);
+        this.onBoxSelected = this.onBoxSelected.bind(this);
     }
 
     componentDidMount() {
         this.setState({
-          question: quizQuestions[0].question,
-          answerOptions: quizQuestions[0].answers
+          question: questionData[0].question,
         });
     }
 
-    handleAnswerSelected(event) {
-      this.setUserAnswer(event.currentTarget.value);
-
-      if (this.state.questionId < quizQuestions.length) {
-        this.setNextQuestion();
-      } else {
-        this.setResults(this.getResults());
-      }
+    onBoxSelected(event) {
+        if (event.target.checked === true) {
+            this.setState({ boxStateValue: true});
+        } else {
+            this.setState({ boxStateValue: false});
+        }
     }
 
-    setUserAnswer(answer) {
-        this.setState((state, props) => ({
-            answersCount: {
-                ...state.answersCount,
-                [answer]: (state.answersCount[answer] || 0) + 1
-            },
-            answer: answer
-        }));
+    getFinalResults() {
+        const resultTopics = Object.keys(this.state.resultCache);
+        const resultPoints = Object.values(this.state.resultCache);
+        let points = 0;
+        for (let e in resultPoints) {
+            points += resultPoints[e];
+        }
+        if (points <= 1) {
+            console.log("keine");
+        } else if (points <= 2) {
+            console.log("geringe");
+        } else if (points <= 4) {
+            console.log("mittlere");
+        } else if (points > 4) {
+            console.log("hohe");
+        }
+
+        this.setState({
+            finalResultPoints: points,
+            finalResultTopics: resultTopics
+        });
     }
 
     setNextQuestion() {
-        const counter = this.state.counter + 1;
-        const questionId = this.state.questionId + 1;
-
-        this.setState({
-          counter: counter,
-          questionId: questionId,
-          question: quizQuestions[counter].question,
-          answerOptions: quizQuestions[counter].answers,
-          answer: ''
-        });
+        if (this.state.questionId === questionData.length) {
+            this.getFinalResults();
+        } else {
+            if (this.state.boxStateValue === true) {
+                this.setState((state, props) => ({
+                    resultCache: {
+                        ...state.resultCache,
+                        [this.state.question]: questionData[this.state.questionId].points
+                    }
+                }));
+            }
+            this.setState({ // here might be issue with questionsid counter
+                questionId: this.state.questionId + 1,
+                question: questionData[this.state.questionId].question,
+                boxStateValue: false
+            });
+        }
     }
-
-    getResults() {
-        const answersCount = this.state.answersCount;
-        const answersCountKeys = Object.keys(answersCount);
-        const answersCountValues = answersCountKeys.map(key => answersCount[key]);
-        const maxAnswerCount = Math.max.apply(null, answersCountValues);
-
-        return answersCountKeys.filter(key => answersCount[key] === maxAnswerCount);
-    }
-
-    setResults(result) {
-       if (result.length === 1) {
-         this.setState({ result: result[0] });
-       } else {
-         this.setState({ result: 'Undetermined' });
-       }
-     }
 
     renderQuiz() {
-       return (
-         <Quiz
-           answer={this.state.answer}
-           answerOptions={this.state.answerOptions}
-           questionId={this.state.questionId}
-           question={this.state.question}
-           questionTotal={quizQuestions.length}
-           onAnswerSelected={this.handleAnswerSelected}
-         />
-       );
-     }
+        return(
+            <Quiz
+                questionId={this.state.questionId}
+                question={this.state.question}
+                questionTotal={questionData.length}
+                stateBox={this.state.boxStateValue}
+                boxChecked={this.onBoxSelected}
+                nextQuestion={this.setNextQuestion}
+            />
+        );
+    }
 
-     renderResult() {
-       return <Result quizResult={this.state.result} />;
-     }
+    renderResult() {
+        return (
+            <Result
+                quizResultPoints={this.state.finalResultPoints}
+                quizResultTopics={this.state.finalResultTopics}
+            />
+        );
+    }
 
     render() {
+        console.log(this.state);
         return (
             <BrowserRouter>
                 <div className="App">
