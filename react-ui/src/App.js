@@ -37,6 +37,7 @@ export class App extends Component {
     }
 
     getFinalResults() {
+        console.log("resultCache", this.state.resultCache);
         const resultTopics = Object.keys(this.state.resultCache);
         const resultPoints = Object.values(this.state.resultCache);
         let points = 0;
@@ -60,8 +61,6 @@ export class App extends Component {
     }
 
     setNextQuestion() {
-        console.log("questionData.length", questionData.length);
-        console.log("this.state.questionId", this.state.questionId);
         if (this.state.questionId === questionData.length) {
             this.getFinalResults();
         } else {
@@ -73,9 +72,10 @@ export class App extends Component {
                     }
                 }));
             }
-            this.setState({ // here might be issue with questionsid counter
-                questionId: this.state.questionId + 1,
-                question: questionData[this.state.questionId].question,
+            this.setState({
+                questionId: this.state.questionId +1 ,
+                counter: this.state.counter +1,
+                question: questionData[this.state.counter + 1].question,
                 boxStateValue: false
             });
         }
