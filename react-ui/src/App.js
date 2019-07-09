@@ -14,7 +14,8 @@ export class App extends Component {
               question: '',
               boxStateValue: false,
               finalResultPoints: 0,
-              finalResultTopics: 0
+              finalResultTopics: 0,
+              resultSuccess: false
         };
         this.setNextQuestion = this.setNextQuestion.bind(this);
         this.onBoxSelected = this.onBoxSelected.bind(this);
@@ -54,6 +55,7 @@ export class App extends Component {
         }
 
         this.setState({
+            resultSuccess:true,
             finalResultPoints: points,
             finalResultTopics: resultTopics
         });
@@ -81,10 +83,12 @@ export class App extends Component {
         }
 
         if (this.state.questionId === questionData.length) {
+            console.log("getting here");
             //extract data from state, pass it as var to final
 
             this.getFinalResults();  //pass to it the data
         } else {
+            console.log("getting trinfewofn");
             this.setState({
                 questionId: this.state.questionId +1 ,
                 counter: this.state.counter +1,
@@ -121,7 +125,8 @@ export class App extends Component {
         return (
             <BrowserRouter>
                 <div className="App">
-                {this.state.finalResultPoints ? this.renderResult() : this.renderQuiz()}
+                { this.state.resultSuccess
+ ? this.renderResult() : this.renderQuiz()}
                 </div>
             </BrowserRouter>
         );
