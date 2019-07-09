@@ -10,6 +10,7 @@ export class App extends Component {
             super(props);
 
             this.state = {
+                counter: 0,
               questionId: 1,
               question: '',
               boxStateValue: false,
@@ -59,6 +60,8 @@ export class App extends Component {
     }
 
     setNextQuestion() {
+        console.log("questionData.length", questionData.length);
+        console.log("this.state.questionId", this.state.questionId);
         if (this.state.questionId === questionData.length) {
             this.getFinalResults();
         } else {
@@ -102,10 +105,11 @@ export class App extends Component {
 
     render() {
         console.log(this.state);
+        console.log("finalResultPoints?", this.state.finalResultPoints);
         return (
             <BrowserRouter>
                 <div className="App">
-                {this.state.result ? this.renderResult() : this.renderQuiz()}
+                {this.state.finalResultPoints ? this.renderResult() : this.renderQuiz()}
                 </div>
             </BrowserRouter>
         );
