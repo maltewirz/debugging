@@ -37,12 +37,10 @@ export class App extends Component {
 
 
     getFinalResults() {
-        console.log(this.testingObj);
-
         const resultTopics = Object.keys(this.testingObj);
         const resultPoints = Object.values(this.testingObj);
         let points = 0;
-        for (let e of resultPoints) {
+        for (let e in resultPoints) {
             points += resultPoints[e];
         }
         if (points <= 1) {
@@ -66,8 +64,9 @@ export class App extends Component {
     // then just add porpeterties to it.
 
     setNextQuestion() {
+        console.log("this.state.questionId", this.state.questionId);
+        console.log("questionData.length",questionData.length);
         if (this.state.boxStateValue === true) {
-            console.log("here", questionData[this.state.counter].points);
             this.testingObj[this.state.question] = questionData[this.state.counter].points;
             // this.setState((state, props) => ({
             //     resultCache: {
