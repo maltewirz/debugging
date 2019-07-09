@@ -8,18 +8,17 @@ export class App extends Component {
 
     constructor(props) {
             super(props);
-
             this.state = {
                 counter: 0,
               questionId: 1,
               question: '',
               boxStateValue: false,
-              resultCache: {},
               finalResultPoints: 0,
               finalResultTopics: 0
         };
         this.setNextQuestion = this.setNextQuestion.bind(this);
         this.onBoxSelected = this.onBoxSelected.bind(this);
+        this.testingObj = {};
     }
 
     componentDidMount() {
@@ -36,10 +35,12 @@ export class App extends Component {
         }
     }
 
+
     getFinalResults() {
-        console.log("resultCache", this.state.resultCache);
-        const resultTopics = Object.keys(this.state.resultCache);
-        const resultPoints = Object.values(this.state.resultCache);
+        console.log(this.testingObj);
+
+        const resultTopics = Object.keys(this.testingObj);
+        const resultPoints = Object.values(this.testingObj);
         let points = 0;
         for (let e of resultPoints) {
             points += resultPoints[e];
@@ -63,24 +64,27 @@ export class App extends Component {
     //in state just the things
     // everything else store in attach to the component itself. this.resultcache = Object
     // then just add porpeterties to it.
+
     setNextQuestion() {
         if (this.state.boxStateValue === true) {
-            this.setState((state, props) => ({
-                resultCache: {
-                    ...state.resultCache,
-                    [this.state.question]: questionData[this.state.questionId].points
-                } //this is not working for some reason
-            })
-            ,  () => {
-                console.log("state in function", this.state);
-            }
-            );
+            console.log("here", questionData[this.state.counter].points);
+            this.testingObj[this.state.question] = questionData[this.state.counter].points;
+            // this.setState((state, props) => ({
+            //     resultCache: {
+            //         ...state.resultCache,
+            //         [this.state.question]: questionData[this.state.questionId].points
+            //     }
+            // })
+            // , () => {
+            //     console.log("state in function", this.state);
+            // }
+            // );
         }
 
         if (this.state.questionId === questionData.length) {
             //extract data from state, pass it as var to final
 
-            // this.getFinalResults();  //pass to it the data
+            this.getFinalResults();  //pass to it the data
         } else {
             this.setState({
                 questionId: this.state.questionId +1 ,
@@ -89,9 +93,6 @@ export class App extends Component {
                 boxStateValue: false
             });
         }
-        // } else { // do this regardless of the questionid, then do the rest
-        //
-        // }
     }
 
     renderQuiz() {
@@ -117,8 +118,7 @@ export class App extends Component {
     }
 
     render() {
-        console.log(this.state);
-        console.log("finalResultPoints?", this.state.finalResultPoints);
+        console.log("testingObj", this.testingObj);
         return (
             <BrowserRouter>
                 <div className="App">
