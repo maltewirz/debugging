@@ -41,7 +41,7 @@ export class App extends Component {
         const resultTopics = Object.keys(this.state.resultCache);
         const resultPoints = Object.values(this.state.resultCache);
         let points = 0;
-        for (let e in resultPoints) {
+        for (let e of resultPoints) {
             points += resultPoints[e];
         }
         if (points <= 1) {
@@ -60,18 +60,28 @@ export class App extends Component {
         });
     }
 
+    //in state just the things
+    // everything else store in attach to the component itself. this.resultcache = Object
+    // then just add porpeterties to it.
     setNextQuestion() {
-        if (this.state.questionId === questionData.length) {
-            this.getFinalResults();
-        } else {
-            if (this.state.boxStateValue === true) {
-                this.setState((state, props) => ({
-                    resultCache: {
-                        ...state.resultCache,
-                        [this.state.question]: questionData[this.state.questionId].points
-                    }
-                }));
+        if (this.state.boxStateValue === true) {
+            this.setState((state, props) => ({
+                resultCache: {
+                    ...state.resultCache,
+                    [this.state.question]: questionData[this.state.questionId].points
+                } //this is not working for some reason
+            })
+            ,  () => {
+                console.log("state in function", this.state);
             }
+            );
+        }
+
+        if (this.state.questionId === questionData.length) {
+            //extract data from state, pass it as var to final
+
+            // this.getFinalResults();  //pass to it the data
+        } else {
             this.setState({
                 questionId: this.state.questionId +1 ,
                 counter: this.state.counter +1,
@@ -79,6 +89,9 @@ export class App extends Component {
                 boxStateValue: false
             });
         }
+        // } else { // do this regardless of the questionid, then do the rest
+        //
+        // }
     }
 
     renderQuiz() {
