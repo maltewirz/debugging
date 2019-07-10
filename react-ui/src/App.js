@@ -64,6 +64,19 @@ export class App extends Component {
         });
     }
 
+    checkIfFinalQuestion() {
+        if (this.state.questionId === questionData.length) {
+            this.getFinalResults();
+        } else {
+            this.setState({
+                questionId: this.state.questionId +1 ,
+                counter: this.state.counter +1,
+                question: questionData[this.state.counter + 1].question,
+                boxStateValue: false
+            });
+        }
+    }
+
     setNextQuestion() {
         if (this.state.boxStateValue === true) {
             this.setState((state, props) => ({
@@ -72,30 +85,11 @@ export class App extends Component {
                         [this.state.question]: questionData[this.state.counter].points
                     }
                 }), () => {
-                    if (this.state.questionId === questionData.length) {
-                        this.getFinalResults();
-                    } else {
-                        this.setState({
-                            questionId: this.state.questionId +1 ,
-                            counter: this.state.counter +1,
-                            question: questionData[this.state.counter + 1].question,
-                            boxStateValue: false
-                        });
-                    }
+                    this.checkIfFinalQuestion();
                 });
         } else {
-            if (this.state.questionId === questionData.length) {
-                this.getFinalResults();
-            } else {
-                this.setState({
-                    questionId: this.state.questionId +1 ,
-                    counter: this.state.counter +1,
-                    question: questionData[this.state.counter + 1].question,
-                    boxStateValue: false
-                });
-            }
+            this.checkIfFinalQuestion();
         }
-
     }
 
     renderQuiz() {
