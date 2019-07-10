@@ -72,21 +72,33 @@ export class App extends Component {
                         ...state.resultCache,
                         [this.state.question]: questionData[this.state.counter].points
                     }
-                }));
+                }), () => {
+                    console.log("here");
+                    if (this.state.questionId === questionData.length) {
+                        this.getFinalResults();
+                    } else {
+                        this.setState({
+                            questionId: this.state.questionId +1 ,
+                            counter: this.state.counter +1,
+                            question: questionData[this.state.counter + 1].question,
+                            boxStateValue: false
+                        });
+                    }
+                });
             // testingObj
             this.testingObj[this.state.question] = questionData[this.state.counter].points;
         }
 
-        if (this.state.questionId === questionData.length) {
-            this.getFinalResults();
-        } else {
-            this.setState({
-                questionId: this.state.questionId +1 ,
-                counter: this.state.counter +1,
-                question: questionData[this.state.counter + 1].question,
-                boxStateValue: false
-            });
-        }
+        // if (this.state.questionId === questionData.length) {
+        //     this.getFinalResults();
+        // } else {
+        //     this.setState({
+        //         questionId: this.state.questionId +1 ,
+        //         counter: this.state.counter +1,
+        //         question: questionData[this.state.counter + 1].question,
+        //         boxStateValue: false
+        //     });
+        // }
     }
 
     renderQuiz() {
