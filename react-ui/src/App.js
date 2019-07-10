@@ -66,14 +66,12 @@ export class App extends Component {
 
     setNextQuestion() {
         if (this.state.boxStateValue === true) {
-            //resultCache
             this.setState((state, props) => ({
                     resultCache: {
                         ...state.resultCache,
                         [this.state.question]: questionData[this.state.counter].points
                     }
                 }), () => {
-                    console.log("here");
                     if (this.state.questionId === questionData.length) {
                         this.getFinalResults();
                     } else {
@@ -85,20 +83,19 @@ export class App extends Component {
                         });
                     }
                 });
-            // testingObj
-            this.testingObj[this.state.question] = questionData[this.state.counter].points;
+        } else {
+            if (this.state.questionId === questionData.length) {
+                this.getFinalResults();
+            } else {
+                this.setState({
+                    questionId: this.state.questionId +1 ,
+                    counter: this.state.counter +1,
+                    question: questionData[this.state.counter + 1].question,
+                    boxStateValue: false
+                });
+            }
         }
 
-        // if (this.state.questionId === questionData.length) {
-        //     this.getFinalResults();
-        // } else {
-        //     this.setState({
-        //         questionId: this.state.questionId +1 ,
-        //         counter: this.state.counter +1,
-        //         question: questionData[this.state.counter + 1].question,
-        //         boxStateValue: false
-        //     });
-        // }
     }
 
     renderQuiz() {
