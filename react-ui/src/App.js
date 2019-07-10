@@ -15,6 +15,7 @@ export class App extends Component {
               boxStateValue: false,
               finalResultPoints: 0,
               finalResultTopics: 0,
+              resultCache: {},
               resultSuccess: false
         };
         this.setNextQuestion = this.setNextQuestion.bind(this);
@@ -38,8 +39,10 @@ export class App extends Component {
 
 
     getFinalResults() {
-        const resultTopics = Object.keys(this.testingObj);
-        const resultPoints = Object.values(this.testingObj);
+        console.log("this.state.resultCache",this.state.resultCache);
+        console.log("this.testingObj", this.testingObj);
+        const resultTopics = Object.keys(this.state.resultCache);
+        const resultPoints = Object.values(this.state.resultCache);
         let points = 0;
         for (let e in resultPoints) {
             points += resultPoints[e];
@@ -61,34 +64,22 @@ export class App extends Component {
         });
     }
 
-    //in state just the things
-    // everything else store in attach to the component itself. this.resultcache = Object
-    // then just add porpeterties to it.
-
     setNextQuestion() {
-        console.log("this.state.questionId", this.state.questionId);
-        console.log("questionData.length",questionData.length);
         if (this.state.boxStateValue === true) {
+            //resultCache
+            this.setState((state, props) => ({
+                    resultCache: {
+                        ...state.resultCache,
+                        [this.state.question]: questionData[this.state.counter].points
+                    }
+                }));
+            // testingObj
             this.testingObj[this.state.question] = questionData[this.state.counter].points;
-            // this.setState((state, props) => ({
-            //     resultCache: {
-            //         ...state.resultCache,
-            //         [this.state.question]: questionData[this.state.questionId].points
-            //     }
-            // })
-            // , () => {
-            //     console.log("state in function", this.state);
-            // }
-            // );
         }
 
         if (this.state.questionId === questionData.length) {
-            console.log("getting here");
-            //extract data from state, pass it as var to final
-
-            this.getFinalResults();  //pass to it the data
+            this.getFinalResults();
         } else {
-            console.log("getting trinfewofn");
             this.setState({
                 questionId: this.state.questionId +1 ,
                 counter: this.state.counter +1,
@@ -121,7 +112,6 @@ export class App extends Component {
     }
 
     render() {
-        console.log("testingObj", this.testingObj);
         return (
             <BrowserRouter>
                 <div className="App">
